@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { PageHeader, Card, CardHeader, Badge, Button, StatusDot } from "@/components/ui"
 import {
   HeartPulse,
@@ -23,66 +26,66 @@ type Job = {
 const jobs: Job[] = [
   {
     id: "j1",
-    name: "支付网关健康检查",
+    name: "Payment Gateway Health Check",
     cron: "*/15 * * * *",
-    cronLabel: "每 15 分钟",
+    cronLabel: "Every 15 minutes",
     channels: ["email", "webhook"],
-    last: "28 分钟前",
+    last: "28 minutes ago",
     status: "success",
     enabled: true,
   },
   {
     id: "j2",
-    name: "核心下单链路巡检",
+    name: "Core Order Flow Inspection",
     cron: "0 * * * *",
-    cronLabel: "每小时",
+    cronLabel: "Hourly",
     channels: ["webhook"],
-    last: "12 分钟前",
+    last: "12 minutes ago",
     status: "success",
     enabled: true,
   },
   {
     id: "j3",
-    name: "库存服务可用性",
+    name: "Inventory Service Availability",
     cron: "*/30 * * * *",
-    cronLabel: "每 30 分钟",
+    cronLabel: "Every 30 minutes",
     channels: ["email"],
-    last: "9 分钟前",
+    last: "9 minutes ago",
     status: "failed",
     enabled: true,
   },
   {
     id: "j4",
-    name: "夜间全量回归",
+    name: "Nightly Full Regression",
     cron: "0 2 * * *",
-    cronLabel: "每天 02:00",
+    cronLabel: "Daily at 02:00",
     channels: ["email", "webhook"],
-    last: "今天 02:00",
+    last: "Today 02:00",
     status: "success",
     enabled: false,
   },
 ]
 
 const history = [
-  { time: "09:45", job: "支付网关健康检查", status: "success" as const, dur: "6.2s" },
-  { time: "09:30", job: "库存服务可用性", status: "failed" as const, dur: "31.0s" },
-  { time: "09:15", job: "支付网关健康检查", status: "success" as const, dur: "5.8s" },
-  { time: "09:00", job: "核心下单链路巡检", status: "success" as const, dur: "12.4s" },
-  { time: "08:45", job: "支付网关健康检查", status: "success" as const, dur: "6.0s" },
+  { time: "09:45", job: "Payment Gateway Health Check", status: "success" as const, dur: "6.2s" },
+  { time: "09:30", job: "Inventory Service Availability", status: "failed" as const, dur: "31.0s" },
+  { time: "09:15", job: "Payment Gateway Health Check", status: "success" as const, dur: "5.8s" },
+  { time: "09:00", job: "Core Order Flow Inspection", status: "success" as const, dur: "12.4s" },
+  { time: "08:45", job: "Payment Gateway Health Check", status: "success" as const, dur: "6.0s" },
 ]
 
 export default function HealthCheckPage() {
   return (
     <div>
       <PageHeader
-        title="日常巡检"
-        desc="为已上传脚本配置定时任务，运行后通过邮件 / Webhook 主动推送结果"
+        title="Daily Health Check"
+        desc="Configure scheduled tasks for uploaded scripts, proactively push results via email/webhook after execution"
         actions={
           <>
             <Button variant="outline">
-              <Plus className="h-4 w-4" /> 新建定时任务
+              <Plus className="h-4 w-4" /> New Scheduled Task
             </Button>
-            <Badge tone="primary">执行编排线 · Phase 2</Badge>
+            <Badge tone="primary">Execution Orchestration · Phase 2</Badge>
           </>
         }
       />
@@ -90,16 +93,16 @@ export default function HealthCheckPage() {
       <div className="space-y-6 p-4 sm:p-6">
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <MiniStat label="启用中任务" value="3" />
-          <MiniStat label="近 24h 运行" value="142" />
-          <MiniStat label="通过率" value="94%" />
-          <MiniStat label="今日失败" value="8" tone="danger" />
+          <MiniStat label="Active Tasks" value="3" />
+          <MiniStat label="Last 24h Runs" value="142" />
+          <MiniStat label="Pass Rate" value="94%" />
+          <MiniStat label="Today's Failures" value="8" tone="danger" />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Jobs */}
           <Card className="lg:col-span-2">
-            <CardHeader title="定时任务" icon={<HeartPulse className="h-4 w-4" />} />
+            <CardHeader title="Scheduled Tasks" icon={<HeartPulse className="h-4 w-4" />} />
             <ul className="divide-y divide-border">
               {jobs.map((j) => (
                 <li key={j.id} className="flex items-center gap-3 px-4 py-3">
@@ -107,14 +110,14 @@ export default function HealthCheckPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-medium">{j.name}</p>
-                      {!j.enabled && <Badge tone="muted">已停用</Badge>}
+                      {!j.enabled && <Badge tone="muted">Disabled</Badge>}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-muted-foreground">
                       <span className="flex items-center gap-1 font-mono text-[11px]">
                         <Clock className="h-3 w-3" /> {j.cronLabel}
                       </span>
                       <span className="font-mono text-[10px]">{j.cron}</span>
-                      <span className="text-[11px]">· 上次 {j.last}</span>
+                      <span className="text-[11px]">· Last {j.last}</span>
                     </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -138,8 +141,8 @@ export default function HealthCheckPage() {
           {/* History */}
           <Card>
             <CardHeader
-              title="执行历史"
-              desc="含截图与日志，可完整回溯"
+              title="Execution History"
+              desc="Includes screenshots and logs, fully traceable"
               icon={<ImageIcon className="h-4 w-4" />}
             />
             <ul className="divide-y divide-border">

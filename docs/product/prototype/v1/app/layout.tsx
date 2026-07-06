@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Copilot 工程效能平台",
-  description: "面向企业研发团队的 AI 工程效能助手：需求分析、测试执行、日常巡检、告警分析等",
+  title: "Copilot Engineering Efficiency Platform",
+  description: "AI engineering copilot for enterprise R&D teams: requirement analysis, test execution, daily health check, alert analysis, etc.",
 }
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={`bg-background ${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en-US" className={`bg-background ${geistSans.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
         <AppShell>{children}</AppShell>
       </body>

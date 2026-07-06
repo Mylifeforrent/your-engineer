@@ -1,6 +1,3 @@
-"use client"
-
-import { useState } from "react"
 import { PageHeader, Card, CardHeader, Badge, Button, StatusDot } from "@/components/ui"
 import {
   Siren,
@@ -19,38 +16,38 @@ type Alert = {
   title: string
   severity: "high" | "medium" | "low"
   time: string
-  status: "分析完成" | "分析中" | "待处理"
+  status: "Analysis Complete" | "Analyzing" | "Pending"
 }
 
 const alerts: Alert[] = [
   {
     id: "AL-2041",
     service: "inventory-service",
-    title: "5xx 错误率突增至 8.2%",
+    title: "5xx error rate spiked to 8.2%",
     severity: "high",
-    time: "1 小时前",
-    status: "分析完成",
+    time: "1 hour ago",
+    status: "Analysis Complete",
   },
   {
     id: "AL-2040",
     service: "order-service",
-    title: "下单接口 P99 延迟 > 2s",
+    title: "Order API P99 latency > 2s",
     severity: "medium",
-    time: "3 小时前",
-    status: "待处理",
+    time: "3 hours ago",
+    status: "Pending",
   },
   {
     id: "AL-2039",
     service: "payment-gateway",
-    title: "回调队列积压 1.2k",
+    title: "Callback queue backlogged 1.2k",
     severity: "low",
-    time: "昨天",
-    status: "分析完成",
+    time: "Yesterday",
+    status: "Analysis Complete",
   },
 ]
 
 const sevTone = { high: "danger", medium: "warning", low: "muted" } as const
-const sevLabel = { high: "高", medium: "中", low: "低" } as const
+const sevLabel = { high: "High", medium: "Medium", low: "Low" } as const
 
 const logLines = [
   "2026-07-06 09:12:04 ERROR [inventory] DeductStock timeout after 3000ms sku=SK-88213",
@@ -65,9 +62,9 @@ export default function AlertsPage() {
   return (
     <div>
       <PageHeader
-        title="告警分析"
-        desc="通过 MCP 查询日志，结合服务上下文与历史经验，AI 产出可溯源的根因分析"
-        actions={<Badge tone="primary">AI 推理线 · Phase 3</Badge>}
+        title="Alert Analysis"
+        desc="Query logs via MCP, combine service context and historical experience, AI produces traceable root cause analysis"
+        actions={<Badge tone="primary">AI Reasoning · Phase 3</Badge>}
       />
 
       <div className="grid grid-cols-1 gap-6 p-4 sm:p-6 lg:grid-cols-3">
@@ -75,9 +72,9 @@ export default function AlertsPage() {
         <div className="space-y-4 lg:col-span-1">
           <Card>
             <CardHeader
-              title="告警列表"
+              title="Alert List"
               icon={<Siren className="h-4 w-4" />}
-              action={<Badge tone="danger">2 待处理</Badge>}
+              action={<Badge tone="danger">2 Pending</Badge>}
             />
             <ul className="divide-y divide-border">
               {alerts.map((a) => (
@@ -97,7 +94,7 @@ export default function AlertsPage() {
                         <span className="font-mono text-[11px] text-muted-foreground">
                           {a.id}
                         </span>
-                        <Badge tone={sevTone[a.severity]}>{sevLabel[a.severity]}优先级</Badge>
+                        <Badge tone={sevTone[a.severity]}>{sevLabel[a.severity]} Priority</Badge>
                       </div>
                       <p className="mt-1 truncate text-sm">{a.title}</p>
                       <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
@@ -112,14 +109,14 @@ export default function AlertsPage() {
           </Card>
 
           <Card>
-            <CardHeader title="服务基础配置" icon={<Server className="h-4 w-4" />} />
+            <CardHeader title="Service Base Config" icon={<Server className="h-4 w-4" />} />
             <div className="space-y-2.5 p-4 text-sm">
-              <ConfigRow k="系统" v="电商核心交易系统" />
-              <ConfigRow k="服务" v={selected.service} />
-              <ConfigRow k="上游" v="order-service, cart-service" />
-              <ConfigRow k="下游" v="mysql-inventory, redis-lock" />
-              <ConfigRow k="影响范围" v="下单 / 秒杀 / 库存展示" />
-              <ConfigRow k="日志 MCP" v="loki-prod (已连接)" />
+              <ConfigRow k="System" v="E-commerce Core Trading System" />
+              <ConfigRow k="Service" v={selected.service} />
+              <ConfigRow k="Upstream" v="order-service, cart-service" />
+              <ConfigRow k="Downstream" v="mysql-inventory, redis-lock" />
+              <ConfigRow k="Impact Scope" v="Order / Flash Sale / Inventory Display" />
+              <ConfigRow k="Log MCP" v="loki-prod (Connected)" />
             </div>
           </Card>
         </div>
@@ -128,7 +125,7 @@ export default function AlertsPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader
-              title={`根因分析 · ${selected.id}`}
+              title={`Root Cause Analysis · ${selected.id}`}
               desc={selected.title}
               icon={<Sparkles className="h-4 w-4" />}
               action={<Badge tone={sevTone[selected.severity]}>{selected.status}</Badge>}
@@ -136,17 +133,17 @@ export default function AlertsPage() {
             <div className="space-y-5 p-4">
               <section>
                 <h4 className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  AI 综合判断
+                  AI Synthesis
                 </h4>
                 <p className="text-sm leading-relaxed text-pretty">
-                  库存服务数据库连接池被打满（active 50/50），叠加 <code className="rounded bg-secondary px-1 font-mono text-xs">stock_lock</code>{" "}
-                  慢查询导致连接长时间占用，扣减库存接口大量超时并返回 5xx。诱因与今日 10 点开始的秒杀活动流量高峰吻合。
+                  Inventory service database connection pool is exhausted (active 50/50), combined with <code className="rounded bg-secondary px-1 font-mono text-xs">stock_lock</code>{" "}
+                  slow queries causing long connection occupancy, stock deduction API timeouts and 5xx errors. The trigger aligns with today's 10:00 flash sale traffic peak.
                 </p>
               </section>
 
               <section>
                 <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  <Terminal className="h-3.5 w-3.5" /> 相关日志（经 MCP 查询）
+                  <Terminal className="h-3.5 w-3.5" /> Related Logs (via MCP Query)
                 </h4>
                 <div className="overflow-x-auto rounded-md border border-border bg-background p-3">
                   <pre className="font-mono text-[11px] leading-relaxed text-muted-foreground">
@@ -161,28 +158,28 @@ export default function AlertsPage() {
 
               <section>
                 <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  <History className="h-3.5 w-3.5" /> 引用历史经验
+                  <History className="h-3.5 w-3.5" /> Referenced Historical Experience
                 </h4>
                 <div className="rounded-md border border-border bg-secondary/30 px-3 py-2.5 text-sm">
                   <div className="flex items-center gap-2">
                     <Badge tone="muted">EXP-118</Badge>
-                    <span className="text-xs text-muted-foreground">2026-05 · 相似度 91%</span>
+                    <span className="text-xs text-muted-foreground">2026-05 · Similarity 91%</span>
                   </div>
                   <p className="mt-1.5 text-pretty">
-                    大促期间连接池打满：临时扩容 db 连接池至 80，为 stock_lock 增加复合索引，长期改造为库存扣减异步化。
+                    During promotions, connection pool saturation: temporarily scale db pool to 80, add composite index for stock_lock, long-term fix is async inventory deduction.
                   </p>
                 </div>
               </section>
 
               <section>
                 <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  建议处置
+                  Suggested Actions
                 </h4>
                 <ol className="space-y-1.5 text-sm">
                   {[
-                    "临时：连接池 50 → 80，缓解超时",
-                    "止血：对 stock_lock 慢查询增加 (sku_id, status) 复合索引",
-                    "根治：库存扣减异步化 + 本地缓存预扣减",
+                    "Temporary: Increase connection pool 50 → 80, alleviate timeouts",
+                    "Stabilize: Add composite index (sku_id, status) for stock_lock slow queries",
+                    "Root cause fix: Async inventory deduction + local cache pre-deduction",
                   ].map((s, i) => (
                     <li key={i} className="flex gap-2">
                       <span className="font-mono text-primary">{i + 1}.</span>
@@ -194,10 +191,10 @@ export default function AlertsPage() {
 
               <div className="flex flex-col gap-2 border-t border-border pt-4 sm:flex-row">
                 <Button className="flex-1">
-                  <Mail className="h-4 w-4" /> 邮件发送分析结果
+                  <Mail className="h-4 w-4" /> Email Analysis Results
                 </Button>
                 <Button variant="outline" className="flex-1">
-                  <Webhook className="h-4 w-4" /> 推送至 Webhook
+                  <Webhook className="h-4 w-4" /> Push to Webhook
                 </Button>
               </div>
             </div>

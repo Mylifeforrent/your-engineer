@@ -25,34 +25,34 @@ type Script = {
 const scripts: Script[] = [
   {
     id: "s1",
-    name: "结算流程 E2E 回归",
+    name: "Checkout Flow E2E Regression",
     kind: "Playwright",
-    tags: ["UI", "结算", "回归"],
-    last: "2 小时前",
+    tags: ["UI", "Checkout", "Regression"],
+    last: "2 hours ago",
     status: "failed",
   },
   {
     id: "s2",
-    name: "订单创建 API 冒烟",
+    name: "Order Create API Smoke",
     kind: "pytest",
-    tags: ["API", "订单"],
-    last: "4 小时前",
+    tags: ["API", "Order"],
+    last: "4 hours ago",
     status: "success",
   },
   {
     id: "s3",
-    name: "登录鉴权 API 套件",
+    name: "Login Auth API Suite",
     kind: "pytest",
-    tags: ["API", "鉴权"],
-    last: "昨天",
+    tags: ["API", "Auth"],
+    last: "Yesterday",
     status: "success",
   },
   {
     id: "s4",
-    name: "商品详情页 UI 校验",
+    name: "Product Detail Page UI Validation",
     kind: "Playwright",
-    tags: ["UI", "商品"],
-    last: "3 天前",
+    tags: ["UI", "Product"],
+    last: "3 days ago",
     status: "error",
   },
 ]
@@ -64,21 +64,21 @@ const statusTone = {
   idle: "muted",
 } as const
 const statusLabel = {
-  success: "成功",
-  failed: "失败",
-  error: "错误",
-  idle: "未运行",
+  success: "Passed",
+  failed: "Failed",
+  error: "Error",
+  idle: "Not Run",
 } as const
 
 const runLog = [
   "> playwright test checkout.spec.ts --project=chromium",
   "Running 12 tests using 4 workers",
-  "  ✓ 应能进入结算页 (1.2s)",
-  "  ✓ 应展示收货地址 (0.8s)",
-  "  ✗ 应正确计算优惠券抵扣 (2.1s)",
+  "  ✓ Should navigate to checkout page (1.2s)",
+  "  ✓ Should display shipping address (0.8s)",
+  "  ✗ Should correctly calculate coupon discount (2.1s)",
   "    Expected: ¥88.00  Received: ¥98.00",
-  "  ✗ 应支持切换支付方式 (1.9s)",
-  "  ✗ 提交订单后跳转结果页 (timeout 30s)",
+  "  ✗ Should support switching payment method (1.9s)",
+  "  ✗ Should redirect to result page after order submission (timeout 30s)",
   "9 passed, 3 failed (46.2s)",
 ]
 
@@ -88,14 +88,14 @@ export default function TestsPage() {
   return (
     <div>
       <PageHeader
-        title="测试执行"
-        desc="上传脚本、内置沙箱运行，采集截图与完整日志，AI 归集为结构化测试报告"
+        title="Test Execution"
+        desc="Upload scripts, run in built-in sandbox, capture screenshots and full logs, AI consolidates into structured test report"
         actions={
           <>
             <Button variant="outline">
-              <Upload className="h-4 w-4" /> 上传脚本
+              <Upload className="h-4 w-4" /> Upload Script
             </Button>
-            <Badge tone="primary">执行编排线 · Phase 2</Badge>
+            <Badge tone="primary">Execution Orchestration · Phase 2</Badge>
           </>
         }
       />
@@ -105,9 +105,9 @@ export default function TestsPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader
-              title="测试用例"
+              title="Test Cases"
               icon={<FlaskConical className="h-4 w-4" />}
-              action={<Badge tone="muted">{scripts.length} 个脚本</Badge>}
+              action={<Badge tone="muted">{scripts.length} scripts</Badge>}
             />
             <ul className="divide-y divide-border">
               {scripts.map((s) => (
@@ -151,27 +151,27 @@ export default function TestsPage() {
           <Card>
             <CardHeader
               title={selected.name}
-              desc={`${selected.kind} · 内置沙箱 · 超时 60s · 内存 512MB`}
+              desc={`${selected.kind} · Built-in Sandbox · Timeout 60s · Memory 512MB`}
               icon={<Tag className="h-4 w-4" />}
               action={
                 <Button size="sm">
-                  <Play className="h-3.5 w-3.5" /> 运行
+                  <Play className="h-3.5 w-3.5" /> Run
                 </Button>
               }
             />
             <div className="grid grid-cols-3 divide-x divide-border border-b border-border">
-              <RunStat label="通过" value="9" tone="success" />
-              <RunStat label="失败" value="3" tone="warning" />
-              <RunStat label="错误" value="0" tone="danger" />
+              <RunStat label="Passed" value="9" tone="success" />
+              <RunStat label="Failed" value="3" tone="warning" />
+              <RunStat label="Error" value="0" tone="danger" />
             </div>
 
             {/* Screenshots */}
             <div className="p-4">
               <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                <ImageIcon className="h-3.5 w-3.5" /> 失败截图
+                <ImageIcon className="h-3.5 w-3.5" /> Failure Screenshots
               </h4>
               <div className="grid grid-cols-3 gap-2">
-                {["优惠券抵扣", "支付方式切换", "订单结果页"].map((t) => (
+                {["Coupon Discount", "Payment Method Switch", "Order Result Page"].map((t) => (
                   <div
                     key={t}
                     className="flex aspect-video flex-col items-center justify-center gap-1 rounded-md border border-border bg-background text-center"
@@ -186,7 +186,7 @@ export default function TestsPage() {
             {/* Logs */}
             <div className="px-4 pb-4">
               <h4 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                <Terminal className="h-3.5 w-3.5" /> 执行日志
+                <Terminal className="h-3.5 w-3.5" /> Execution Log
               </h4>
               <div className="overflow-x-auto rounded-md border border-border bg-background p-3">
                 <pre className="font-mono text-[11px] leading-relaxed text-muted-foreground">
@@ -211,22 +211,22 @@ export default function TestsPage() {
 
           <Card>
             <CardHeader
-              title="AI 测试报告"
-              desc="将截图、日志与执行数据归集为结构化报告"
+              title="AI Test Report"
+              desc="Consolidates screenshots, logs, and execution data into structured report"
               icon={<Sparkles className="h-4 w-4" />}
-              action={<Badge tone="warning">待确认同步</Badge>}
+              action={<Badge tone="warning">Pending Sync Confirmation</Badge>}
             />
             <div className="space-y-3 p-4">
               <p className="text-sm leading-relaxed text-pretty">
-                本次结算回归 12 例中 3 例失败，均集中于优惠券与支付环节：优惠券抵扣金额计算错误（预期 ¥88 实得 ¥98），
-                疑似满减规则未生效；支付方式切换与订单提交超时可能由前置优惠券异常连带导致。建议优先排查营销计价服务。
+                In this checkout regression, 3 out of 12 cases failed, all concentrated on coupon and payment flows: coupon discount amount calculation error (expected ¥88, actual ¥98),
+                suspected tiered discount rule not taking effect; payment method switch and order submission timeout may be cascading failures from the coupon exception. Recommend prioritizing investigation of the marketing pricing service.
               </p>
               <div className="flex flex-col gap-2 sm:flex-row">
                 <Button variant="outline" className="flex-1">
-                  <ExternalLink className="h-4 w-4" /> 同步至 Jira
+                  <ExternalLink className="h-4 w-4" /> Sync to Jira
                 </Button>
                 <Button variant="outline" className="flex-1">
-                  <ExternalLink className="h-4 w-4" /> 同步至 Confluence
+                  <ExternalLink className="h-4 w-4" /> Sync to Confluence
                 </Button>
               </div>
             </div>

@@ -17,38 +17,38 @@ import {
 const tools = [
   {
     id: "release",
-    name: "发布文档生成",
-    desc: "聚合 Jira / Confluence / PR，生成发布文档草稿",
+    name: "Release Document Generation",
+    desc: "Aggregate Jira / Confluence / PRs, generate release document draft",
     icon: Rocket,
     tone: "primary" as const,
   },
   {
     id: "jira-create",
-    name: "Jira 建单",
-    desc: "按团队格式生成 Jira 任务",
+    name: "Jira Create",
+    desc: "Generate Jira tasks in team format",
     icon: FilePlus2,
     tone: "default" as const,
   },
   {
     id: "jira-review",
-    name: "Jira 评审",
-    desc: "AI 检查单据完整性与规范",
+    name: "Jira Review",
+    desc: "AI checks ticket completeness and standards compliance",
     icon: FileSearch2,
     tone: "default" as const,
   },
   {
     id: "confluence",
-    name: "Confluence 编写",
-    desc: "按模板创建 / 编辑文档",
+    name: "Confluence Write",
+    desc: "Create / edit documents from templates",
     icon: FileEdit,
     tone: "default" as const,
   },
 ]
 
 const releaseInputs = [
-  { icon: GitPullRequest, label: "已合并 PR", value: "18 个", src: "github/order-service" },
-  { icon: Check, label: "已完成 Jira", value: "12 项", src: "OMS 看板 · Sprint 42" },
-  { icon: FileEdit, label: "关联 Confluence", value: "3 篇", src: "交易域空间" },
+  { icon: GitPullRequest, label: "Merged PRs", value: "18", src: "github/order-service" },
+  { icon: Check, label: "Completed Jira", value: "12 items", src: "OMS Board · Sprint 42" },
+  { icon: FileEdit, label: "Related Confluence", value: "3 docs", src: "Trading Domain Space" },
 ]
 
 export default function MiniToolsPage() {
@@ -57,14 +57,14 @@ export default function MiniToolsPage() {
   return (
     <div>
       <PageHeader
-        title="小工具 / 发布"
-        desc="基于平台模板配置团队专属小工具，AI 按团队格式生成内容，写回均需人工确认"
+        title="Mini Tools / Release"
+        desc="Configure team-specific mini tools based on platform templates, AI generates content in team format, all write-backs require manual confirmation"
         actions={
           <>
             <Button variant="outline">
-              <Plus className="h-4 w-4" /> 新建小工具
+              <Plus className="h-4 w-4" /> New Mini Tool
             </Button>
-            <Badge tone="primary">AI 推理线 · Phase 3</Badge>
+            <Badge tone="primary">AI Reasoning · Phase 3</Badge>
           </>
         }
       />
@@ -93,8 +93,8 @@ export default function MiniToolsPage() {
           <div className="space-y-4 lg:col-span-2">
             <Card>
               <CardHeader
-                title="发布准备 · v3.8.0"
-                desc="聚合的输入源"
+                title="Release Prep · v3.8.0"
+                desc="Aggregated input sources"
                 icon={<Rocket className="h-4 w-4" />}
               />
               <ul className="divide-y divide-border">
@@ -118,7 +118,7 @@ export default function MiniToolsPage() {
               </ul>
               <div className="p-4">
                 <Button className="w-full" onClick={() => setPhase("done")}>
-                  <Sparkles className="h-4 w-4" /> 重新生成发布文档
+                  <Sparkles className="h-4 w-4" /> Regenerate Release Document
                 </Button>
               </div>
             </Card>
@@ -128,36 +128,36 @@ export default function MiniToolsPage() {
           <div className="lg:col-span-3">
             <Card>
               <CardHeader
-                title="发布文档草稿"
-                desc="团队格式 · 可编辑 / AI 润色"
+                title="Release Document Draft"
+                desc="Team format · Editable / AI polishable"
                 icon={<FileEdit className="h-4 w-4" />}
-                action={<Badge tone="warning">待确认写回</Badge>}
+                action={<Badge tone="warning">Pending Write-Back Confirmation</Badge>}
               />
               <div className="space-y-4 p-4">
-                <DocSection title="版本概述">
-                  本次发布聚焦交易域订单超时自动取消能力与结算体验优化，包含 12 项需求与 18 个 PR，涉及订单、库存、结算三个服务。
+                <DocSection title="Version Overview">
+                  This release focuses on the Trading Domain's order timeout auto-cancellation capability and settlement experience optimization, including 12 requirements and 18 PRs, covering order, inventory, and settlement services.
                 </DocSection>
-                <DocSection title="主要变更">
+                <DocSection title="Major Changes">
                   <ul className="list-disc space-y-1 pl-4">
-                    <li>新增订单超时自动取消与库存回滚</li>
-                    <li>结算页优惠券计价重构，修复满减未生效问题</li>
-                    <li>库存扣减接口幂等性改造</li>
+                    <li>Added order timeout auto-cancellation and inventory rollback</li>
+                    <li>Refactored settlement page coupon pricing, fixed tiered discount not taking effect</li>
+                    <li>Inventory deduction API idempotency refactoring</li>
                   </ul>
                 </DocSection>
-                <DocSection title="风险与回滚">
-                  灰度 10% 起量，观测库存回滚成功率与结算下单转化；异常时可通过开关 <code className="rounded bg-secondary px-1 font-mono text-xs">order.timeout.enabled</code> 快速关闭。
+                <DocSection title="Risks & Rollback">
+                  Start with 10% gradual rollout, monitor inventory rollback success rate and settlement order conversion; in case of anomaly, can quickly disable via the <code className="rounded bg-secondary px-1 font-mono text-xs">order.timeout.enabled</code> switch.
                 </DocSection>
 
                 <div className="flex flex-col gap-2 border-t border-border pt-4 sm:flex-row">
                   <Button className="flex-1">
-                    <Check className="h-4 w-4" /> 确认写回 Confluence
+                    <Check className="h-4 w-4" /> Confirm Write-Back to Confluence
                   </Button>
                   <Button variant="outline" className="flex-1">
-                    <Sparkles className="h-4 w-4" /> AI 润色全文
+                    <Sparkles className="h-4 w-4" /> AI Polish Full Text
                   </Button>
                 </div>
                 <p className="text-center text-[11px] text-muted-foreground">
-                  所有写回操作均需人工确认
+                  All write-back operations require manual confirmation
                 </p>
               </div>
             </Card>

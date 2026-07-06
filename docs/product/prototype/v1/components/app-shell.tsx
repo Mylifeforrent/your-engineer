@@ -30,12 +30,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex flex-col leading-tight">
             <span className="text-sm font-semibold">Copilot</span>
-            <span className="font-mono text-[10px] text-muted-foreground">工程效能平台 v4</span>
+            <span className="font-mono text-[10px] text-muted-foreground">Engineering Efficiency Platform v4</span>
           </div>
           <button
             className="ml-auto text-muted-foreground lg:hidden"
             onClick={() => setMobileOpen(false)}
-            aria-label="关闭菜单"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
@@ -88,7 +88,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               YZ
             </div>
             <div className="flex min-w-0 flex-col leading-tight">
-              <span className="truncate text-sm">杨振 · 后端</span>
+              <span className="truncate text-sm">Zhen Yang · Backend</span>
               <span className="truncate font-mono text-[10px] text-muted-foreground">
                 platform-team
               </span>
@@ -112,28 +112,28 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <button
             className="text-muted-foreground lg:hidden"
             onClick={() => setMobileOpen(true)}
-            aria-label="打开菜单"
+            aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
           </button>
 
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <span className="hidden sm:inline">工程效能平台</span>
+            <span className="hidden sm:inline">Engineering Efficiency Platform</span>
             <ChevronRight className="hidden h-3.5 w-3.5 sm:inline" />
-            <span className="font-medium text-foreground">{active?.title ?? "总览"}</span>
+            <span className="font-medium text-foreground">{active?.title ?? "Overview"}</span>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
             <div className="hidden items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1.5 text-sm text-muted-foreground md:flex">
               <Search className="h-3.5 w-3.5" />
-              <span className="text-xs">搜索模块、任务…</span>
+              <span className="text-xs">Search modules, tasks...</span>
               <kbd className="ml-6 rounded border border-border bg-secondary px-1 font-mono text-[10px]">
                 ⌘K
               </kbd>
             </div>
             <button
               className="relative flex h-8 w-8 items-center justify-center rounded-md border border-border bg-card text-muted-foreground hover:text-foreground"
-              aria-label="通知"
+              aria-label="Notifications"
             >
               <Bell className="h-4 w-4" />
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />

@@ -10,12 +10,12 @@ export default function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title="总览"
-        desc="今天是 2026 年 7 月 6 日 · 你有 3 项待确认的 AI 产出"
+        title="Overview"
+        desc="Today is July 6, 2026 · You have 3 pending AI outputs awaiting confirmation"
         actions={
           <Button>
             <Sparkles className="h-4 w-4" />
-            新建需求分析
+            New Requirement Analysis
           </Button>
         }
       />
@@ -37,10 +37,10 @@ export default function DashboardPage() {
           {/* Activity feed */}
           <Card className="lg:col-span-2">
             <CardHeader
-              title="平台动态"
-              desc="AI 推理与执行编排的最新产出"
+              title="Platform Activity"
+              desc="Latest outputs from AI reasoning and execution orchestration"
               action={
-                <Badge tone="muted">实时</Badge>
+                <Badge tone="muted">Live</Badge>
               }
             />
             <ul className="divide-y divide-border">
@@ -69,8 +69,8 @@ export default function DashboardPage() {
           {/* Pending tasks */}
           <Card>
             <CardHeader
-              title="待办 / 待确认"
-              desc="写操作均需人工确认"
+              title="To-Do / Pending Confirmation"
+              desc="All write operations require manual confirmation"
               action={<Badge tone="primary">{pendingTasks.length}</Badge>}
             />
             <ul className="divide-y divide-border">
@@ -100,7 +100,7 @@ export default function DashboardPage() {
         {/* Health trend + module grid */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <Card className="lg:col-span-1">
-            <CardHeader title="巡检通过率" desc="近 12 个执行窗口" />
+            <CardHeader title="Health Check Pass Rate" desc="Last 12 execution windows" />
             <div className="p-4">
               <div className="flex h-32 items-end gap-1.5">
                 {healthTrend.map((v, i) => (
@@ -115,15 +115,15 @@ export default function DashboardPage() {
               </div>
               <div className="mt-3 flex items-center justify-between font-mono text-[10px] text-muted-foreground">
                 <span>-12h</span>
-                <span>现在</span>
+                <span>Now</span>
               </div>
             </div>
           </Card>
 
           <div className="lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-sm font-medium">功能模块</h3>
-              <span className="font-mono text-[11px] text-muted-foreground">7 个模块</span>
+              <h3 className="text-sm font-medium">Modules</h3>
+              <span className="font-mono text-[11px] text-muted-foreground">7 modules</span>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {modules.map((m) => {

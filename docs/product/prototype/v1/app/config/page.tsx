@@ -13,22 +13,22 @@ type Mcp = {
 }
 
 const mcpServers: Mcp[] = [
-  { id: "m1", name: "Jira Cloud", type: "任务管理", endpoint: "mcp://jira-prod", status: "connected" },
-  { id: "m2", name: "Confluence", type: "文档", endpoint: "mcp://confluence-prod", status: "connected" },
-  { id: "m3", name: "Loki 日志查询", type: "日志", endpoint: "mcp://loki-prod", status: "connected" },
-  { id: "m4", name: "GitHub PR", type: "代码", endpoint: "mcp://github-org", status: "connected" },
-  { id: "m5", name: "Jenkins 触发", type: "CI", endpoint: "mcp://jenkins", status: "disabled" },
-  { id: "m6", name: "Elastic 日志", type: "日志", endpoint: "mcp://es-cluster", status: "error" },
+  { id: "m1", name: "Jira Cloud", type: "Task Management", endpoint: "mcp://jira-prod", status: "connected" },
+  { id: "m2", name: "Confluence", type: "Documentation", endpoint: "mcp://confluence-prod", status: "connected" },
+  { id: "m3", name: "Loki Log Query", type: "Logging", endpoint: "mcp://loki-prod", status: "connected" },
+  { id: "m4", name: "GitHub PR", type: "Code", endpoint: "mcp://github-org", status: "connected" },
+  { id: "m5", name: "Jenkins Trigger", type: "CI", endpoint: "mcp://jenkins", status: "disabled" },
+  { id: "m6", name: "Elastic Logs", type: "Logging", endpoint: "mcp://es-cluster", status: "error" },
 ]
 
 const channels = [
-  { id: "c1", name: "研发团队邮件组", type: "email" as const, target: "dev-team@corp.com", status: "connected" as const },
-  { id: "c2", name: "企业 IM Webhook", type: "webhook" as const, target: "https://im.corp/hook/xa92", status: "connected" as const },
-  { id: "c3", name: "值班告警 Webhook", type: "webhook" as const, target: "https://oncall.corp/hook/b71", status: "connected" as const },
+  { id: "c1", name: "Dev Team Mailing List", type: "email" as const, target: "dev-team@corp.com", status: "connected" as const },
+  { id: "c2", name: "Enterprise IM Webhook", type: "webhook" as const, target: "https://im.corp/hook/xa92", status: "connected" as const },
+  { id: "c3", name: "On-Call Alert Webhook", type: "webhook" as const, target: "https://oncall.corp/hook/b71", status: "connected" as const },
 ]
 
 const statusTone = { connected: "success", error: "danger", disabled: "muted" } as const
-const statusLabel = { connected: "已连接", error: "连接失败", disabled: "已停用" } as const
+const statusLabel = { connected: "Connected", error: "Connection Failed", disabled: "Disabled" } as const
 
 export default function ConfigPage() {
   const [testing, setTesting] = useState<string | null>(null)
@@ -41,28 +41,28 @@ export default function ConfigPage() {
   return (
     <div>
       <PageHeader
-        title="配置中心"
-        desc="统一通过 MCP 集成外部能力，配置通知渠道并进行连接测试；配置按团队隔离"
-        actions={<Badge tone="primary">平台基础 · Phase 1</Badge>}
+        title="Config Center"
+        desc="Integrate external capabilities via MCP, configure notification channels, and run connection tests; config is isolated per team"
+        actions={<Badge tone="primary">Platform Foundation · Phase 1</Badge>}
       />
 
       <div className="space-y-6 p-4 sm:p-6">
         <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/30 px-4 py-3 text-sm text-muted-foreground">
           <ShieldCheck className="h-4 w-4 shrink-0 text-primary" />
           <span className="text-pretty">
-            新增外部能力 = 配置一个 MCP 服务，而非硬编码适配器。凭据加密存储，按团队 (platform-team) 隔离。
+            Adding a new external capability = configuring an MCP server, not hardcoding an adapter. Credentials are encrypted and isolated per team (platform-team).
           </span>
         </div>
 
         {/* MCP servers */}
         <Card>
           <CardHeader
-            title="MCP 服务"
-            desc="模块按需调用团队已配置的 MCP 能力"
+            title="MCP Services"
+            desc="Modules call team-configured MCP capabilities as needed"
             icon={<Plug className="h-4 w-4" />}
             action={
               <Button size="sm" variant="outline">
-                <Plus className="h-3.5 w-3.5" /> 添加 MCP
+                <Plus className="h-3.5 w-3.5" /> Add MCP
               </Button>
             }
           />
@@ -91,7 +91,7 @@ export default function ConfigPage() {
                   <Zap
                     className={"h-3.5 w-3.5 " + (testing === m.id ? "animate-pulse text-primary" : "")}
                   />
-                  {testing === m.id ? "测试中" : "测试"}
+                  {testing === m.id ? "Testing" : "Test"}
                 </Button>
               </div>
             ))}
@@ -101,12 +101,12 @@ export default function ConfigPage() {
         {/* Notification channels */}
         <Card>
           <CardHeader
-            title="通知渠道"
-            desc="异步流程（巡检、告警）通过邮件 / Webhook 通知；企业 IM 经 Webhook 接入"
+            title="Notification Channels"
+            desc="Async flows (health check, alerts) notify via email/webhook; enterprise IM via webhook"
             icon={<Mail className="h-4 w-4" />}
             action={
               <Button size="sm" variant="outline">
-                <Plus className="h-3.5 w-3.5" /> 添加渠道
+                <Plus className="h-3.5 w-3.5" /> Add Channel
               </Button>
             }
           />
@@ -131,7 +131,7 @@ export default function ConfigPage() {
                   <Zap
                     className={"h-3.5 w-3.5 " + (testing === c.id ? "animate-pulse text-primary" : "")}
                   />
-                  {testing === c.id ? "测试中" : "测试"}
+                  {testing === c.id ? "Testing" : "Test"}
                 </Button>
               </li>
             ))}
