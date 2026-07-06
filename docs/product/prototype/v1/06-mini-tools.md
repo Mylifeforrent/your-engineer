@@ -1,43 +1,47 @@
-# PRD 06 — Mini-tools (AI reasoning line)
+# Prototype v1 — UX: Mini Tools / Release
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.6
-- **Line:** AI reasoning · **Roadmap:** Phase 3
-- **Depends on:** AI write-back layer (shared), Config Center (04)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/mini-tools` · **File:** `app/mini-tools/page.tsx`
+- **PRD:** [prd/06-mini-tools.md](../../prd/06-mini-tools.md)
+- **Line/Phase:** AI Reasoning · Phase 3
 
-## User story
+## Purpose
 
-I want to configure mini-tools that fit our team's conventions based on templates
-the platform provides — e.g. Jira review, Jira create, Confluence create/edit —
-and use AI to generate content in our team's format. Release prep especially:
-after tests pass, we hand-write release docs from Jira, Confluence, and PRs,
-which is time-consuming, and I want AI to ease that burden.
+Templated, team-specific mini tools built on the shared AI write-back layer, with
+Release Document Generation as the flagship: aggregate PRs + completed Jira +
+Confluence, produce a draft in team format, confirm write-back. Encodes PRD
+principle 1 (confirm write-back) and 6 (AI assists, human edits/polishes).
 
-## Core capabilities
+## Layout
 
-- **Templated mini-tools**: the platform provides templates; teams configure
-  their own mini-tools (Jira review, Jira create, Confluence create/edit, etc.).
-- **AI content generation**: use AI to generate Jira / Confluence content in the
-  team's format.
-- **Release prep tool**: aggregate Jira, Confluence, and PR info; AI generates a
-  release-doc draft, reducing manual summarization.
+Header: `New Mini Tool` (outline) + phase badge. Body:
 
-All mini-tools reuse the shared "AI generates → human confirms → write back"
-capability.
+- **Tool cards** — 4-up grid: Release Document Generation (primary), Jira Create,
+  Jira Review, Confluence Write. Each: icon, name, description.
+- **Release tool** — two-column on `lg` (2/5 inputs · 3/5 draft):
+  - `Release Prep · v3.8.0` card: aggregated input sources (Merged PRs, Completed
+    Jira, Related Confluence) each with count badge + source label; a `Regenerate
+    Release Document` button.
+  - `Release Document Draft` card: sectioned draft (Version Overview, Major Changes,
+    Risks & Rollback) badged `Pending Write-Back Confirmation`; confirm bar with
+    `Confirm Write-Back to Confluence` (primary) + `AI Polish Full Text` (outline);
+    reminder line "All write-back operations require manual confirmation."
 
-## Business rules
+## States
 
-- All write-back actions require user confirmation (Principle 1: humans confirm
-  write operations).
-- Generated content must match the team's configured format.
+- `phase: "idle" | "gen" | "done"` — **initialized to `done`** so the draft shows by
+  default; `Regenerate` sets it back to `done` (no real generation delay wired).
+- Tool cards, inputs, and draft body are mock consts.
 
-## Acceptance criteria
+## Interaction notes / fidelity
 
-- [ ] Provides configurable mini-tool templates.
-- [ ] Teams can configure their own mini-tools from templates.
-- [ ] AI-generated content matches the team's configured format.
-- [ ] The release tool can aggregate Jira / Confluence / PR and generate a doc
-      draft.
-- [ ] All write-back actions require user confirmation.
+- `Regenerate` is the only wired handler (no-op transition). Confirm write-back and
+  AI polish are display-only.
+- Reuses the same write-back / confirm-gate pattern as Requirement Analysis — this
+  is the shared "AI generates → human confirms → write back" layer surfaced in a
+  third place (per PRD confirmed decision 1).
+
+## Not yet modeled (defer to FE/BE design)
+
+- Configurable tool templates, real source aggregation, live generation, editable
+  draft, and the actual Confluence write-back.

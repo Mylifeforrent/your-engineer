@@ -1,51 +1,57 @@
-# PRD 07 — Alert Analyzer (AI reasoning line)
+# Prototype v1 — UX: Alert Analysis
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.7
-- **Line:** AI reasoning · **Roadmap:** Phase 3
-- **Depends on:** Config Center (04) log-type MCP, Notifications (shared)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/alerts` · **File:** `app/alerts/page.tsx`
+- **PRD:** [prd/07-alert-analyzer.md](../../prd/07-alert-analyzer.md)
+- **Line/Phase:** AI Reasoning · Phase 3
 
-## User story
+## Purpose
 
-When a production problem arrives, I need to inspect logs along the business flow
-and analyze the situation. I want to pre-configure the basics — what system this
-is, which service, the impact scope, how to query the logs — and let AI combine
-past fix experience with its own judgment to produce a synthesized result, then
-send it to me via email or webhook.
+Triage production alerts: query logs via MCP, combine service context and
+historical experience, and produce a traceable AI root-cause analysis with
+suggested actions, then notify via email/webhook. Encodes PRD principle 2 (evidence
+first) and 6 (AI assists).
 
-## Core capabilities
+## Layout
 
-- **Base config**: configure context for a system / service — system design,
-  upstream/downstream relationships, interaction methods, impact scope, etc.
-  This part is initially prepared by humans.
-- **Log access via MCP**: the Alert Analyzer builds in no specific log-source
-  adapter. Log queries go through log-type MCP servers configured in the Config
-  Center (different log systems are just different MCP servers).
-- **AI analysis**: when an alert fires, AI queries logs via MCP and, combining the
-  configured context, past fix experience, and its own judgment, produces a
-  synthesized root-cause analysis.
-- **Experience iteration**: fix experience is initially entered partly by hand,
-  then automatically accumulated and refined from handled alerts.
-- **Result delivery**: the analysis result is delivered to the user via email or
-  webhook.
+Header: phase badge. Two-column on `lg` (1/3 list+context · 2/3 analysis):
 
-## Business rules
+- **Left (stacked):**
+  - `Alert List` card — selectable list. Each row: severity dot, alert id,
+    severity badge (High/Medium/Low), title, `service · time`, chevron.
+  - `Service Base Config` card — key/value rows (System, Service, Upstream,
+    Downstream, Impact Scope, Log MCP) that update with the selected alert's
+    service.
+- **Right:** `Root Cause Analysis · {id}` card with:
+  1. **AI Synthesis** — prose root cause (inline code for identifiers).
+  2. **Related Logs (via MCP Query)** — monospace log panel, ERROR lines in
+     destructive tone.
+  3. **Referenced Historical Experience** — an experience card (id, date,
+     similarity %, remedy summary).
+  4. **Suggested Actions** — ordered list (temporary / stabilize / root-cause fix).
+  5. **Notify bar** — `Email Analysis Results` (primary) + `Push to Webhook`
+     (outline).
 
-- Log queries go through configured MCP servers; log sources are not hardcoded
-  (Principle 4: unified extension integration).
-- The analysis result must carry evidence: relevant logs and referenced
-  historical experience (Principle 2: evidence first).
+## States
 
-## Acceptance criteria
+- `selected: Alert` (default first). Selection drives the analysis card title,
+  the `Service Base Config` service row, and the status badge/tone.
+- Alert list, logs, experience, and actions are mock consts (the analysis body is
+  the inventory-service sample regardless of which alert is selected in v1).
+- Severity enum: `high | medium | low` → tone `danger/warning/muted`.
 
-- [ ] Base context can be configured for a system / service.
-- [ ] Log queries go through configured MCP servers; no hardcoded log source.
-- [ ] Supports manual entry of initial fix experience.
-- [ ] AI can produce a root-cause analysis combining context, logs, and
-      historical experience.
-- [ ] The analysis result carries evidence (relevant logs, referenced historical
-      experience).
-- [ ] Results can be delivered via email or webhook.
-- [ ] Historical alert analyses can accumulate into future experience.
+> **Fixed during verification (2026-07-06):** this page called `useState` without a
+> `"use client"` directive or the import, which broke the production build. Both
+> were added; build now passes.
+
+## Interaction notes / fidelity
+
+- Alert selection is the only wired interaction. Notify buttons are display-only.
+- Logs-via-MCP and the historical-experience card are the evidence-first anchors;
+  the experience card also previews the "experience accumulation" concept from the
+  PRD (cold-start caveat noted in the overview risks).
+
+## Not yet modeled (defer to FE/BE design)
+
+- Real alert ingestion, live MCP log queries, per-alert analysis, the experience
+  base + similarity retrieval, and actual notification dispatch.

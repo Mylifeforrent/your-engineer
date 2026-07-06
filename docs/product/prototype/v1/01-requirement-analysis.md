@@ -1,58 +1,61 @@
-# PRD 01 — Requirement Analysis (AI reasoning line)
+# Prototype v1 — UX: Requirement Analysis
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.1
-- **Line:** AI reasoning · **Roadmap:** Phase 1
-- **Depends on:** Config Center (04), Domain Knowledge (05), AI write-back layer (shared)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/requirements` · **File:** `app/requirements/page.tsx`
+- **PRD:** [prd/01-requirement-analysis.md](../../prd/01-requirement-analysis.md)
+- **Line/Phase:** AI Reasoning · Phase 1
 
-## User story
+## Purpose
 
-When I receive a requirement, I want to enter a description or related links,
-select the business domain it belongs to, and let AI do a targeted analysis
-combining the domain knowledge and the link content, giving me suggested tasks
-and user stories. After I confirm, it creates Jira tasks in one click and syncs
-the requirement doc to Confluence, and I can have AI polish any part that needs it.
+Let a user turn a requirement (text or link) plus a chosen business domain into an
+AI analysis — impact scope, suggested Jira tasks, user stories — with traceable
+sources, then confirm to create Jira/Confluence. Encodes PRD principles 1 (human
+confirm), 2 (evidence first), 6 (AI assists).
 
-## Inputs
+## Layout
 
-- **Requirement content**: text description, or a hyperlink (AI visits the link
-  to fetch content).
-- **Business domain**: the user picks from the configured domains; AI reads that
-  domain's business knowledge to do a targeted analysis.
+Two-column on `lg` (2/5 input · 3/5 output); stacks on mobile.
 
-## Processing
+- **Left (input):**
+  - `Requirement Input` card: business-domain chip selector (single-select, 5 mock
+    domains), requirement textarea, an "Attached" link chip, and a `Start Analysis`
+    button.
+  - `Referenced Sources` card: empty placeholder until analysis completes, then a
+    list of cited domain docs / links with type badges.
+- **Right (output):** `Analysis Results` card with a state-driven body.
 
-1. AI visits the links and reads the selected domain's business knowledge.
-2. Generates the requirement analysis: impact scope, suggested tasks, user stories.
+## States
 
-## Outputs & actions
+Single state var `phase: "idle" | "analyzing" | "done"` (mock, `setTimeout` 1.6s).
 
-- **Analysis result**: requirement summary, impact analysis, suggested task list,
-  user story list, cited sources.
-- The user can manually edit any part, or select a portion for AI to polish.
-- After confirmation: create Jira task(s), and sync the requirement doc to the
-  designated Confluence page.
+| Phase | Output card | Sources card | Result badge |
+| --- | --- | --- | --- |
+| `idle` | centered prompt + sparkle icon | placeholder text | `Not Started` (muted) |
+| `analyzing` | spinner + "Retrieving domain knowledge…" | placeholder | — |
+| `done` | full analysis (below) | cited sources list | `Pending Manual Confirmation` (warning) |
 
-## Business rules
+Domain selection updates the result card subtitle (`Domain: …`) live.
 
-- No Jira / Confluence content is created before the user confirms (Principle 1:
-  humans confirm write operations).
-- The analysis must reflect the selected domain's knowledge and be source-traceable
-  (Principle 2: evidence first).
+## `done` output anatomy
 
-## Acceptance criteria
+1. **Requirement Summary** — prose paragraph.
+2. **Impact Scope** — row of primary badges (affected services/areas).
+3. **Suggested Tasks (Jira Draft)** — list; each item shows title, type badge
+   (Backend/Frontend), story points, a per-item edit (pencil) affordance; section
+   header has an **AI Polish** action.
+4. **User Stories** — list of story cards.
+5. **Confirm bar** — `Confirm and Create 4 Jira Tasks` (primary) + `Sync to
+   Confluence` (outline), followed by the reminder line "No Jira / Confluence
+   content is created before confirmation."
 
-- [ ] Supports both text and hyperlink input.
-- [ ] The analysis actually uses the selected business domain's knowledge (sources
-      are traceable).
-- [ ] Suggested tasks and user stories are editable and support partial AI polish.
-- [ ] No Jira / Confluence content is created before the user confirms.
-- [ ] After Jira task creation and Confluence sync succeed, the created results
-      and links are echoed back.
+## Interaction notes / fidelity
 
-## Out of scope (this phase)
+- `Start Analysis` is the only wired transition; edit, AI-polish, and the confirm
+  buttons are display-only affordances in v1.
+- The confirm gate and source traceability are the two must-keep behaviors for
+  later stages — they map directly to PRD acceptance criteria.
 
-- No automatic chaining from requirement to test script (independent of Test
-  Execution).
+## Not yet modeled (defer to FE/BE design)
+
+- Real link fetching, real domain retrieval, editable task rows, partial-selection
+  AI polish, and the actual Jira/Confluence write-back result echo.

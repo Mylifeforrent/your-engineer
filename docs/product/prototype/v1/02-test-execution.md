@@ -1,55 +1,48 @@
-# PRD 02 — Test Execution (execution orchestration line)
+# Prototype v1 — UX: Test Execution
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.2
-- **Line:** Execution orchestration · **Roadmap:** Phase 2
-- **Depends on:** Execution sandbox (shared), AI write-back layer (shared)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/tests` · **File:** `app/tests/page.tsx`
+- **PRD:** [prd/02-test-execution.md](../../prd/02-test-execution.md)
+- **Line/Phase:** Execution Orchestration · Phase 2
 
-## User story
+## Purpose
 
-I want to upload my own test scripts (Playwright for UI, pytest for APIs), name
-and tag them, and click to run them from a list. The run results must show
-screenshots and full execution logs, and I must be able to see the details
-whether it succeeds, fails, or errors out. The finished records can be synced to
-Jira / Confluence automatically or manually, in a format I predefine.
+Manage uploaded test scripts (Playwright/pytest), run them in the built-in sandbox,
+and view screenshots + full logs, with AI consolidating results into a structured
+report that can be synced to Jira/Confluence. Encodes PRD principle 5 (process
+visibility) and principle 1 (confirm before sync).
 
-## Core capabilities
+## Layout
 
-- **Script management**: upload test scripts (Playwright / pytest, etc.), name
-  and tag them, forming a test-case list.
-- **Execution trigger**: click to run from the list, executing in the platform's
-  built-in sandbox.
-- **Result collection**: screenshots and full execution logs. All three states —
-  success, failure, error — must be inspectable for the current case.
-- **AI result consolidation**: consolidate screenshots, logs, and execution data
-  into a structured test report.
-- **Result sync**: sync execution records to Jira / Confluence automatically or
-  manually, in a user-predefined format.
+Two-column on `lg` (2/5 script list · 3/5 detail); header has `Upload Script`
+(outline) + phase badge.
 
-## Business rules
+- **Left:** `Test Cases` card — selectable list. Each row: status dot, name, kind
+  badge (Playwright/pytest), hashtag tags, last-run time.
+- **Right (stacked):**
+  - Selected-script card: subtitle shows sandbox limits ("Built-in Sandbox ·
+    Timeout 60s · Memory 512MB"), a `Run` button, a 3-cell stat strip
+    (Passed/Failed/Error), a **Failure Screenshots** grid (3 placeholder thumbs),
+    and an **Execution Log** panel (monospace, color-coded pass/fail lines).
+  - `AI Test Report` card: prose synthesis of the run + `Sync to Jira` / `Sync to
+    Confluence` (both outline), badged `Pending Sync Confirmation`.
 
-- Scripts run in the built-in sandbox and must have isolation, timeouts, and
-  resource limits.
-- All three states (success/failure/error) must have readable execution details
-  (Principle 5: process visibility).
-- Write-back sync reuses the shared write-back capability; write operations
-  require user confirmation.
+## States
 
-## Acceptance criteria
+- `selected: Script` (default first). Clicking a row highlights it and drives the
+  detail card title/subtitle.
+- Status is a fixed enum per script: `success | failed | error | idle`, mapped to
+  tone (`success/warning/danger/muted`) and label (`Passed/Failed/Error/Not Run`).
+- `Run`, stats, and log content are **static mock** in v1 (no live-run transition);
+  the detail always shows the checkout-regression sample (9 passed / 3 failed).
 
-- [ ] Supports script upload, naming, tagging, and list management.
-- [ ] Scripts run in the built-in sandbox with isolation, timeouts, and resource
-      limits.
-- [ ] Every run can show screenshots and full logs; all three states have
-      readable execution details.
-- [ ] AI can consolidate raw execution results into a structured report.
-- [ ] The sync format is user-predefinable; both automatic and manual sync are
-      supported.
+## Interaction notes / fidelity
 
-## Out of scope (this phase)
+- Script selection is the only wired interaction.
+- Log color rule: lines with `✗`/`failed`/`Expected` → destructive; `✓` → success.
+- The two sync buttons are this module's confirm gate (display-only in v1).
 
-- Built-in sandbox only this phase; no Jenkins triggering (later via MCP
-  extension — see delivery roadmap).
-- No AI generation of test scripts from scratch.
+## Not yet modeled (defer to FE/BE design)
+
+- Real upload, live sandbox run + streaming logs, real screenshot capture, and the
+  actual report write-back.

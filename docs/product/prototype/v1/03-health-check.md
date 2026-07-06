@@ -1,38 +1,43 @@
-# PRD 03 — Daily Health Check (execution orchestration line)
+# Prototype v1 — UX: Daily Health Check
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.3
-- **Line:** Execution orchestration · **Roadmap:** Phase 2
-- **Depends on:** Test Execution (02) script mgmt / engine / result collection, Notifications (shared)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/health-check` · **File:** `app/health-check/page.tsx`
+- **PRD:** [prd/03-health-check.md](../../prd/03-health-check.md)
+- **Line/Phase:** Execution Orchestration · Phase 2
 
-## User story
+## Purpose
 
-I want to set scheduled jobs against previously uploaded automation scripts, have
-them trigger automatically, and after each run — whether it succeeds or not — be
-notified of the result via email or webhook.
+Schedule uploaded scripts to run on a cron cadence and push results via
+email/webhook, with a fully traceable run history (screenshots + logs). Reuses the
+sandbox from Test Execution; encodes PRD principle 5 (visibility).
 
-## Relationship to Test Execution
+## Layout
 
-Reuses Test Execution's script management, execution engine, and result
-collection. The differences are the trigger method and the result destination:
+Header: `New Scheduled Task` (outline) + phase badge. Body:
 
-- **Scheduled trigger**: configure a scheduled job (cron, etc.) for a script to
-  run periodically and automatically.
-- **Result notification**: after a run completes, the success/failure result is
-  actively pushed to the user via email or webhook (reusing the shared
-  notification capability).
+- **Stat strip** (4 mini-stats): Active Tasks, Last 24h Runs, Pass Rate, Today's
+  Failures (danger tone).
+- **Two-column on `lg`** (2/3 jobs · 1/3 history):
+  - `Scheduled Tasks` card — job list. Each row: status dot (enabled+status, else
+    muted), name, `Disabled` badge when off, cron label + raw cron + last-run, the
+    channel icons it notifies to (mail/webhook), and an **enable toggle** switch.
+  - `Execution History` card — timeline rows: time, status dot, job name, duration,
+    chevron (into detail).
 
-## Business rules
+## States
 
-- Execution history (including screenshots and logs) must be inspectable
-  (Principle 5: process visibility).
+- No React state — page is a static render of `jobs[]` and `history[]` mock data.
+- The enable toggle uses `defaultChecked` (uncontrolled) — visual only in v1.
+- Job status enum: `success | failed`; `enabled` boolean flips the dot to muted.
 
-## Acceptance criteria
+## Interaction notes / fidelity
 
-- [ ] Scheduled jobs can be configured for uploaded scripts.
-- [ ] Scheduled jobs trigger execution automatically on schedule.
-- [ ] Execution results (success/failure) are notified to the user via email or
-      webhook.
-- [ ] Execution history is inspectable, including screenshots and logs.
+- Everything is display-only: `New Scheduled Task`, toggles, and history chevrons
+  are affordances, not wired.
+- Notification-channel icons per job map to the channels configured in Config
+  Center — the cross-module link to surface in later design.
+
+## Not yet modeled (defer to FE/BE design)
+
+- Cron editor, real scheduling/execution, live pass-rate, run-detail drill-in with
+  screenshots/logs, and actual email/webhook dispatch.

@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { PageHeader, Card, CardHeader, Badge, Button, StatusDot } from "@/components/ui"
 import {
   Siren,

@@ -1,45 +1,44 @@
-# PRD 04 — Config Center (shared foundation)
+# Prototype v1 — UX: Config Center
 
-- **Owner:** (you)
-- **Status:** Approved
-- **Last updated:** 2026-07-05
-- **Source:** PRODUCT_SPEC_v4.md §4.4
-- **Line:** Shared foundation · **Roadmap:** Phase 1
-- **Consumed by:** all modules (external capabilities are integrated here)
+- **Owner:** (you) · **Status:** Approved · **Last updated:** 2026-07-06
+- **Route:** `/config` · **File:** `app/config/page.tsx`
+- **PRD:** [prd/04-config-center.md](../../prd/04-config-center.md)
+- **Line/Phase:** Platform Foundation · Phase 1
 
-## User story
+## Purpose
 
-I want to configure the external capabilities my team needs — Jira, Confluence,
-log queries, notifications, etc. — letting each team define which systems to
-connect and where results sync to.
+Configure the team's external capabilities as **MCP servers** and its
+**notification channels**, and run connection tests. Encodes PRD principle 4 (all
+integration via MCP, no hardcoded adapters) and the credential-isolation stance.
 
-## Core capabilities
+## Layout
 
-- **MCP server config**: external capabilities are integrated uniformly through
-  MCP. Teams add, configure, and enable MCP servers (e.g. Jira, Confluence, log
-  queries) in the Config Center. Modules call the configured MCP capabilities as
-  needed.
-- **Notification channel config**: configure email and webhook destinations for
-  async flows.
-- **Isolation**: each team / workspace configures independently, without
-  interference.
-- **Connection test**: verify that MCP servers and notification channels work.
+Header: phase badge. Body:
 
-## Business rules
+- **Principle banner** — shield icon + reminder: "Adding a new external capability =
+  configuring an MCP server, not hardcoding an adapter. Credentials are encrypted
+  and isolated per team."
+- `MCP Services` card — 2-col grid of servers. Each: status dot, name, type badge,
+  `mcp://…` endpoint (monospace), status badge (`Connected/Connection Failed/
+  Disabled`), and a **Test** button (ghost) that pulses while testing.
+- `Notification Channels` card — list of channels. Each: email/webhook icon, name,
+  target (address/URL), `Connected` badge, and a **Test** button.
 
-- Config is isolated per team; credentials are stored securely (Principle 3: team
-  autonomy; risk: MCP credential security).
-- Adding a new external capability = configuring an MCP server, not hardcoding an
-  adapter into the product (Principle 4: unified extension integration).
-- At the product level we only define the contract "external capabilities are
-  integrated by configuring an MCP server and called by modules"; the MCP
-  server's own implementation and runtime are technical-design matters, out of
-  this PRD's scope.
+## States
 
-## Acceptance criteria
+- `testing: string | null` — id of the row currently under test; set on click,
+  cleared after 1.2s (`setTimeout`). Drives the pulsing zap icon + "Testing" label.
+- MCP status enum: `connected | error | disabled` → tone `success/danger/muted`.
+- Server/channel lists are mock consts.
 
-- [ ] Supports adding, configuring, and enabling/disabling MCP servers.
-- [ ] Modules can call the team's configured MCP capabilities.
-- [ ] Supports configuring email and webhook notification channels.
-- [ ] Config is isolated per team; credentials stored securely.
-- [ ] Provides a connection test.
+## Interaction notes / fidelity
+
+- The **Test** action is the only wired interaction (simulated success, no real
+  probe). `Add MCP` / `Add Channel` are display-only.
+- This screen is the backbone dependency for Requirement Analysis, Test Execution,
+  Health Check, and Alert Analysis — those modules consume what's configured here.
+
+## Not yet modeled (defer to FE/BE design)
+
+- Add/edit MCP + channel forms, credential entry/encryption, real connection
+  probing, per-team isolation, and MCP call auditing.
