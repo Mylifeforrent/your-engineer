@@ -1,0 +1,2 @@
+# Commit shared Claude Code config, but ignore personal local overrides
+.claude/settings.local.json
